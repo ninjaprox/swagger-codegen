@@ -2,8 +2,8 @@ library {{pubName}}.api;
 
 import 'dart:async';
 import 'dart:convert';
-import 'package:intl/intl.dart' as intl;{{#browserClient}}
-import 'package:http/browser_client.dart';{{/browserClient}}
+import 'package:intl/intl.dart' as intl;
+{{#browserClient}}import 'package:http/browser_client.dart';{{/browserClient}}{{^browserClient}}import 'package:http/io_client.dart';{{/browserClient}}
 import 'package:http/http.dart';
 
 part 'api_client.dart';
