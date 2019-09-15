@@ -23,13 +23,13 @@ class {{classname}} {
   {{^isDate}}
     {{name}} =
     {{#complexType}}
-      {{#isListContainer}}{{complexType}}.listFromJson(json['{{baseName}}']){{/isListContainer}}{{^isListContainer}}
+      {{#isListContainer}}{{#required}}{{complexType}}.listFromJson(json['{{baseName}}']){{/required}}{{^required}}{{complexType}}.listFromJson(json['{{baseName}}'] ?? []){{/required}}{{/isListContainer}}{{^isListContainer}}
       {{#isMapContainer}}{{complexType}}.mapFromJson(json['{{baseName}}']){{/isMapContainer}}
       {{^isMapContainer}}new {{complexType}}.fromJson(json['{{baseName}}']){{/isMapContainer}}{{/isListContainer}}
     {{/complexType}}
     {{^complexType}}
       {{#isListContainer}}
-        (json['{{baseName}}'] as List).map((item) => item as {{items.datatype}}).toList()
+        {{#required}}(json['{{baseName}}'] as List).map((item) => item as {{items.datatype}}).toList(){{/required}}{{^required}}((json['{{baseName}}'] as List) ?? []).map((item) => item as {{items.datatype}}).toList(){{/required}}
       {{/isListContainer}}
       {{^isListContainer}}
         json['{{baseName}}']
@@ -43,7 +43,7 @@ class {{classname}} {
   Map<String, dynamic> toJson() {
     return {
     {{#vars}}
-      {{#isDateTime}}'{{baseName}}': {{name}} == null ? '' : {{name}}.toUtc().toIso8601String(){{^-last}},{{/-last}}{{/isDateTime}}{{^isDateTime}}{{#isDate}}'{{baseName}}': {{name}} == null ? '' : new intl.DateFormat.yMd().format({{name}}){{^-last}},{{/-last}}{{/isDate}}{{^isDate}}'{{baseName}}': {{name}}{{^-last}},{{/-last}}{{/isDate}}{{/isDateTime}}
+      {{#isDateTime}}'{{baseName}}': {{name}} == null ? '' : {{name}}.toUtc().toIso8601String(){{^-last}},{{/-last}}{{/isDateTime}}{{^isDateTime}}{{#isDate}}'{{baseName}}': {{name}} == null ? '' : new intl.DateFormat('yyyy-MM-dd').format({{name}}){{^-last}},{{/-last}}{{/isDate}}{{^isDate}}'{{baseName}}': {{name}}{{^-last}},{{/-last}}{{/isDate}}{{/isDateTime}}
     {{/vars}}
      };
   }
